@@ -1,10 +1,10 @@
-import mongoose from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 
 const postSchema = new mongoose.Schema(
   {
     userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      require: "User",
+      type: ObjectId,
+      ref: "User",
     },
     tittle: {
       type: String,
@@ -12,18 +12,23 @@ const postSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: true,
+      require: true,
     },
     image: {
       type: String,
-      required: true,
+      require: true,
+    },
+    categoryId: {
+      type: ObjectId,
+      ref: "Category",
     },
     review: {
       type: Number,
-      required: true,
+      default: 0,
     },
     rating: {
       type: Number,
+      default: 0,
     },
     statusSave: {
       type: Boolean,
@@ -35,22 +40,20 @@ const postSchema = new mongoose.Schema(
     timeclose: {
       type: String,
     },
-    location: [
-      {
-        address: {
-          type: String,
-        },
-        province: {
-          type: String,
-        },
-        district: {
-          type: String,
-        },
-        ward: {
-          type: String,
-        },
+    location: {
+      address: {
+        type: String,
       },
-    ],
+      province: {
+        type: String,
+      },
+      district: {
+        type: String,
+      },
+      ward: {
+        type: String,
+      },
+    },
   },
   { timestamps: true }
 );

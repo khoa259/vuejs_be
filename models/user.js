@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema(
     },
     image: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: ObjectId,
         ref: "Post",
       },
     ],
