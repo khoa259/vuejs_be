@@ -12,7 +12,10 @@ const categorieSchema = new mongoose.Schema(
         ref: "Posts",
       },
     ],
-    imageCate: [],
+    imageCate: {
+      type: String,
+      require: true,
+    },
   },
   { timestamps: true }
 );

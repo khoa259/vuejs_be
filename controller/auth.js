@@ -4,6 +4,8 @@ import crypto from "crypto";
 import nodemailer from "nodemailer";
 import bcrypt from "bcrypt";
 
+const mySort = { createdAt: -1 };
+
 const sendVericationEmail = async (email, verifiedCationToken, userName) => {
   // tao thong tin gui email
   const transport = nodemailer.createTransport({
@@ -36,7 +38,7 @@ export const signUp = async (req, res) => {
     //check email có tồn tại không
     const existUser = await User.findOne({ email });
     if (existUser) {
-      return res.status(400).json({ message: "Email đã tồn tại" });
+      return res.status(500).json({ message: "Email đã tồn tại" });
     }
     // tạo 1 user mới
     const newUser = new User(req.body);
@@ -86,6 +88,7 @@ const generateKey = () => {
   return secretKey;
 };
 const secretKey = generateKey();
+
 export const login = async (req, res) => {
   try {
     const { email, password, verified } = req.body;
@@ -107,6 +110,7 @@ export const login = async (req, res) => {
         _id: user._id,
         email: user.email,
         userName: user.userName,
+        role: user.role,
         timestamps: Date.parse(user.createdAt),
       },
     });
@@ -123,4 +127,11 @@ export const getUserById = async (req, res) => {
   } catch (error) {
     res.status(400).json({ message: "khong co du lieu" });
   }
+};
+
+export const get = async (req, res) => {
+  try {
+    const user = await User.find().sort(mySort).exec();
+    res.json({ response: user });
+  } catch (error) {}
 };

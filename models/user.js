@@ -22,6 +22,10 @@ const userSchema = new mongoose.Schema(
     verifiedCationToken: {
       type: String,
     },
+    role: {
+      type: String,
+      default: "user",
+    },
     image: [
       {
         type: ObjectId,

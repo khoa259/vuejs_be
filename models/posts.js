@@ -6,7 +6,7 @@ const postSchema = new mongoose.Schema(
       type: ObjectId,
       ref: "User",
     },
-    tittle: {
+    title: {
       type: String,
       require: true,
     },
@@ -34,11 +34,21 @@ const postSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    pricemin: {
+      type: String,
+      require: true,
+    },
+    pricemax: {
+      type: String,
+      require: true,
+    },
     timeopen: {
       type: String,
+      require: true,
     },
     timeclose: {
       type: String,
+      require: true,
     },
     location: {
       address: {

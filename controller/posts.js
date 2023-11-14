@@ -17,7 +17,7 @@ export const createPost = async (req, res) => {
 };
 
 export const getPosts = async (req, res, next) => {
-  const limitItem = 3;
+  const limitItem = 12;
   const page = parseInt(req.query.page) || 1;
   const skipPage = (page - 1) * limitItem;
 
@@ -27,7 +27,10 @@ export const getPosts = async (req, res, next) => {
       .skip(skipPage)
       .limit(limitItem)
       .exec();
-    res.status(200).json({ message: "Lấy bài viết thành công", getAll });
+    res.status(200).json({
+      message: "Lấy bài viết thành công",
+      response: { limitItem, page, getAll },
+    });
   } catch (error) {
     res.status(500).json({ message: "Lấy bài viết không thành công" });
   }
