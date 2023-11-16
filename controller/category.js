@@ -4,9 +4,6 @@ import Category from "../models/category.js";
 export const createCate = async (req, res) => {
   const file = req.file;
   const { nameCate } = req.body;
-  if (!file) {
-    res.status(500).json({ message: "Ảnh không tồn tại" });
-  }
   try {
     const checkDuplicate = await Category.findOne({ nameCate }).exec();
     if (checkDuplicate) {
@@ -21,7 +18,8 @@ export const createCate = async (req, res) => {
 
     res.status(200).json({ message: "Thêm thành công", create });
   } catch (error) {
-    res.status(500).json({ message: "Lỗi rồi =======>", error });
+    console.log("lỗi =>>>", error);
+    res.status(500).json({ message: "Lỗi rồi" });
   }
 };
 

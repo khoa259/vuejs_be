@@ -5,10 +5,11 @@ import {
   getPostByUserId,
   getPosts,
 } from "../controller/posts.js";
+import { upload } from "../middleware/uploadFile.js";
 
 export const routerPosts = Router();
 
-routerPosts.post("/creatPosts", createPost);
+routerPosts.post("/creatPosts", upload.single("images"), createPost);
 routerPosts.get("/getPosts", getPosts);
 routerPosts.get("/getById/:id", getById);
 routerPosts.get("/getPostById/:userId", getPostByUserId);

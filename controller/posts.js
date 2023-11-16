@@ -1,10 +1,20 @@
 import User from "../models/user.js";
 import Posts from "../models/posts.js";
 import Category from "../models/category.js";
+import { getUrlImg } from "../middleware/uploadFile.js";
 
 export const createPost = async (req, res) => {
+  const file = req.file;
+  const { tittle, description, timeopen, timeclose, location } = req.body;
   try {
-    const createposts = await new Posts(req.body).save();
+    const createposts = await new Posts({
+      tittle,
+      description,
+      timeopen,
+      timeclose,
+      location,
+      imagePosts: getUrlImg(file),
+    }).save();
     await Category.findOneAndUpdate(createposts.categoryId, {
       $addToSet: {
         postId: createposts._id,
@@ -13,6 +23,7 @@ export const createPost = async (req, res) => {
     res.status(200).json({ message: "Thêm bài viết thành công", createposts });
   } catch (error) {
     res.status(500).json({ message: " không thành công" });
+    console.log(error);
   }
 };
 
@@ -52,6 +63,15 @@ export const getById = async (req, res) => {
     const get = await Posts.findById({ _id })
       .populate("categoryId", "nameCate")
       .exec();
+    await Posts.findOneAndUpdate(
+      { _id },
+      {
+        $inc: {
+          review: 1,
+        },
+      },
+      { new: true }
+    );
     res.status(200).json({ get });
   } catch (error) {
     res.status(500).json({ message: "Không tìm thấy" });
