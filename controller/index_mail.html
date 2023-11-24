@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body style="font-family: Arial, Helvetica, sans-serif;">
+    <div class="container">
+        <div class="content_email">
+            <div class="title" style="display: flex; justify-content: center; align-items: center;">
+                <img src="https://vuejs.org/images/logo.png" style="width: 60px;" alt="">
+                <h1 style="margin-left: 1rem; text-align: center; ">Learn Vue</h1>
+            </div>
+            <div class="content" style="margin-top: 2rem;
+            line-height: 2rem;">
+                <h2>Xin chào, {{userName}}</h2>
+                <p style="font-size: 16px;
+                font-weight: 500;">Cảm ơn bạn đã đăng ký tài khoản với chúng tôi ! <br />
+                    Đây là email xác thực tài khoản đăng ký của bạn. Xin cảm ơn
+                </p>
+                <a href={{linkConfirm}} target="_blank"
+                    style="margin-top: 1rem; font-size: 18px; background-color: rgb(47, 134, 47); padding: 10px 32px; border-radius: 5px; color: white; text-decoration: none; display: inline-block;">
+                    Xác nhận
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

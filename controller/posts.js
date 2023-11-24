@@ -5,14 +5,34 @@ import { getUrlImg } from "../middleware/uploadFile.js";
 
 export const createPost = async (req, res) => {
   const file = req.file;
-  const { tittle, description, timeopen, timeclose, location } = req.body;
+  const {
+    title,
+    categoryId,
+    description,
+    pricemin,
+    pricemax,
+    timeopen,
+    timeclose,
+    address,
+    province,
+    district,
+    ward,
+  } = req.body;
   try {
     const createposts = await new Posts({
-      tittle,
+      title,
+      categoryId,
       description,
+      pricemin,
+      pricemax,
       timeopen,
       timeclose,
-      location,
+      location: {
+        address,
+        province,
+        district,
+        ward,
+      },
       imagePosts: getUrlImg(file),
     }).save();
     await Category.findOneAndUpdate(createposts.categoryId, {
@@ -20,7 +40,9 @@ export const createPost = async (req, res) => {
         postId: createposts._id,
       },
     });
-    res.status(200).json({ message: "Thêm bài viết thành công", createposts });
+    res
+      .status(200)
+      .json({ message: "Thêm bài viết thành công", response: createposts });
   } catch (error) {
     res.status(500).json({ message: " không thành công" });
     console.log(error);
@@ -35,6 +57,7 @@ export const getPosts = async (req, res, next) => {
   try {
     const getAll = await Posts.find({})
       .populate("categoryId", "nameCate")
+      .sort({ createdAt: -1 })
       .skip(skipPage)
       .limit(limitItem)
       .exec();
@@ -72,7 +95,24 @@ export const getById = async (req, res) => {
       },
       { new: true }
     );
-    res.status(200).json({ get });
+    res.status(200).json({ response: [get] });
+  } catch (error) {
+    res.status(500).json({ message: "Không tìm thấy" });
+  }
+};
+
+export const getPostsRelated = async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const get = await Posts.findById({ _id });
+    const getPostsRelated = await Posts.find({
+      _id: { $ne: get._id },
+      categoryId: get.categoryId,
+    })
+      .populate("categoryId", "nameCate")
+      .limit(6)
+      .exec();
+    res.status(200).json({ related: getPostsRelated });
   } catch (error) {
     res.status(500).json({ message: "Không tìm thấy" });
   }

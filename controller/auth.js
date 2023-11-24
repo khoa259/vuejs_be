@@ -3,6 +3,9 @@ import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 import bcrypt from "bcrypt";
+import fs from "fs-extra";
+import Handlebars from "handlebars";
+import path from "path";
 
 const mySort = { createdAt: -1 };
 
@@ -10,19 +13,29 @@ const sendVericationEmail = async (email, verifiedCationToken, userName) => {
   // tao thong tin gui email
   const transport = nodemailer.createTransport({
     service: "gmail",
-    host: "lovestory",
+    secure: false,
+    host: "VUEJS",
     auth: {
       user: "khoa10688@gmail.com",
       pass: "jzrs wqxb qktc ioom",
     },
   });
+  const source = fs
+    .readFileSync("controller/index_mail.html", "utf-8")
+    .toString();
+  const template = Handlebars.compile(source);
+  console.log(Handlebars.compile(source));
+  const replacements = {
+    userName,
+    linkConfirm: `http://localhost:5000/api/verify/${verifiedCationToken}`,
+  };
+  const htmlToSend = template(replacements);
   // noi dung gui email verifiedCationToken
   const sendMaillerOption = {
-    from: "LoveStory",
+    from: "VUEJS",
     to: email,
     subject: "Email Xác Thực Đăng Nhập",
-    text: `Xin chào, ${userName}
-    Ấn vào link xác thực để đăng nhập: http://localhost:5000/api/verify/${verifiedCationToken}`,
+    html: htmlToSend,
   };
 
   // gửi Email
@@ -78,7 +91,7 @@ export const verifyToken = async (req, res) => {
     user.verified = true;
     user.verifiedCationToken = undefined;
     await user.save();
-    res.status(200).json({ message: "email đã được xác thực" });
+    res.status(200).json({ message: "Email đã được xác thực" });
   } catch (error) {
     res.status(500).json({ message: "Lỗi Token" });
   }
