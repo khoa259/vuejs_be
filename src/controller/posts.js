@@ -117,3 +117,40 @@ export const getPostsRelated = async (req, res) => {
     res.status(500).json({ message: "Không tìm thấy" });
   }
 };
+
+export const handleSearchPosts = async (req, res) => {
+  try {
+    const search = req.query.search.trim();
+    if (search === "") {
+      return res.status(200).json({ response: [] });
+    }
+    console.log(search);
+    const getPosts = await Posts.find({
+      $or: [
+        {
+          title: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+      ],
+    })
+      .populate("categoryId", "nameCate")
+      .exec();
+    res.status(200).json({ response: getPosts });
+  } catch (error) {
+    res.status(500).json({ message: "Không tìm thấy" });
+    console.log(error);
+  }
+};
+export const getPostsByCategories = async (req, res) => {
+  try {
+    const categoryId = req.query.category;
+    const getPosts = await Posts.find({ categoryId })
+      .populate("categoryId")
+      .exec();
+    res.status(200).json({ response: getPosts });
+  } catch (error) {
+    console.log(error);
+  }
+};

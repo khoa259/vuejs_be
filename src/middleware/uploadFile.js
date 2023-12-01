@@ -2,7 +2,7 @@ import multer from "multer";
 const baseUrl = "http://localhost:5000/api/public";
 const storage = multer.diskStorage({
   destination: (res, file, cb) => {
-    cb(null, "./public");
+    cb(null, "../../public");
   },
   filename: (res, file, cb) => {
     const uniqueSuffix = Date.now() + Math.round(Math.random() * 1e9);
