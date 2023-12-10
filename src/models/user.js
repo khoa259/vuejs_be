@@ -22,6 +22,12 @@ const userSchema = new mongoose.Schema(
     verifiedCationToken: {
       type: String,
     },
+    wishlist: [
+      {
+        type: ObjectId,
+        ref: "Posts",
+      },
+    ],
     role: {
       type: Number,
       default: 0,

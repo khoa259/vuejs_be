@@ -6,12 +6,14 @@ import { authRoute } from "./router/auth.js";
 import { routerPosts } from "./router/posts.js";
 import { routerCate } from "./router/category.js";
 import { routerDashboard } from "./router/dashboard.js";
+import { userRoute } from "./router/user.js";
 
 export const app = express();
 const port = 5000;
 app.use(cors());
 app.use(express.json());
 app.use("/api", authRoute);
+app.use("/api", userRoute);
 app.use("/api", routerPosts);
 app.use("/api", routerCate);
 app.use("/api", routerDashboard);

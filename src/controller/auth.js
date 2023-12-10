@@ -21,7 +21,7 @@ const sendVericationEmail = async (email, verifiedCationToken, userName) => {
     },
   });
   const source = fs
-    .readFileSync("controller/index_mail.html", "utf-8")
+    .readFileSync("src/controller/index_mail.html", "utf-8")
     .toString();
   const template = Handlebars.compile(source);
   console.log(Handlebars.compile(source));
