@@ -5,7 +5,8 @@ import nodemailer from "nodemailer";
 import bcrypt from "bcrypt";
 import fs from "fs-extra";
 import Handlebars from "handlebars";
-import path from "path";
+import dotenv from "dotenv";
+dotenv.config();
 
 const mySort = { createdAt: -1 };
 
@@ -16,8 +17,8 @@ const sendVericationEmail = async (email, verifiedCationToken, userName) => {
     secure: false,
     host: "VUEJS",
     auth: {
-      user: "khoa10688@gmail.com",
-      pass: "jzrs wqxb qktc ioom",
+      user: process.env.MAILER_EMAIL,
+      pass: process.env.MAILER_PASSWORD,
     },
   });
   const source = fs
@@ -27,7 +28,7 @@ const sendVericationEmail = async (email, verifiedCationToken, userName) => {
   console.log(Handlebars.compile(source));
   const replacements = {
     userName,
-    linkConfirm: `http://localhost:5000/api/verify/${verifiedCationToken}`,
+    linkConfirm: `${process.env.BASE_API_VERIFY}/${verifiedCationToken}`,
   };
   const htmlToSend = template(replacements);
   // noi dung gui email verifiedCationToken

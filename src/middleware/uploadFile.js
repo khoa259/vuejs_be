@@ -1,5 +1,7 @@
 import multer from "multer";
-const baseUrl = "http://localhost:5000/api/public";
+import dotenv from "dotenv";
+dotenv.config();
+
 const storage = multer.diskStorage({
   destination: (res, file, cb) => {
     cb(null, "../../public");
@@ -13,5 +15,5 @@ export const upload = multer({ storage: storage });
 
 export const getUrlImg = (file) => {
   console.log("file=>", file);
-  return `${baseUrl}/${file.filename}`;
+  return `${process.env.URL_API_UPLOAD}/${file.filename}`;
 };

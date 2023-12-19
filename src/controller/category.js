@@ -1,3 +1,7 @@
+import fs from "fs-extra";
+import dotenv from "dotenv";
+dotenv.config();
+
 import { getUrlImg } from "../middleware/uploadFile.js";
 import Category from "../models/category.js";
 
@@ -41,5 +45,37 @@ export const getById = async (req, res) => {
     res.status(200).json({ message: "Thành công ", response: getCateById });
   } catch (error) {
     res.status(500).json({ message: "Không tìm thấy danh mục nào" });
+  }
+};
+
+export const updateCate = async (req, res) => {
+  const _id = req.params.id;
+  try {
+    const update = await Category.findOneAndUpdate({ _id }, req.body, {
+      new: true,
+    }).exec();
+    res.status(200).json({ message: "Cập nhật thành công", response: update });
+  } catch (error) {
+    res.status(500).json({ message: "lỗi" });
+    console.log(error);
+  }
+};
+
+export const removeImage = async (req, res) => {
+  const { image } = req.body;
+  const replaceUrl = image.replace(process.env.URL_API_UPLOAD, "");
+  const filePath = `./public/${replaceUrl}`;
+  console.log("filepath", filePath);
+  if (fs.existsSync(filePath)) {
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send("Xóa file không thành công");
+      }
+      console.log("thành công");
+      return res.send("Xóa file thành công");
+    });
+  } else {
+    return res.status(404).send("không có ảnh này");
   }
 };
