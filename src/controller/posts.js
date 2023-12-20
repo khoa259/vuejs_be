@@ -143,6 +143,7 @@ export const handleSearchPosts = async (req, res) => {
     console.log(error);
   }
 };
+
 export const getPostsByCategories = async (req, res) => {
   try {
     const categoryId = req.query.category;
@@ -152,5 +153,32 @@ export const getPostsByCategories = async (req, res) => {
     res.status(200).json({ response: getPosts });
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const updatePosts = async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const file = req.file;
+    const update = await Posts.findByIdAndUpdate(
+      { _id },
+      (req.body, { imagePosts: getUrlImg(file) })
+    ).exec();
+    res.status(200).json({ message: "Cập nhật thành công", response: update });
+  } catch (error) {
+    res.status(500).json({ message: "Cập nhật thất bại" });
+  }
+};
+
+export const deletPosts = async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const removePosts = await Posts.findByIdAndDelete({ _id }).exec();
+    res.status(200).json({
+      message: "Xóa bài viết thành công",
+      response: removePosts,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Xóa bài viết thất bại" });
   }
 };

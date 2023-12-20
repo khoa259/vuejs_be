@@ -50,32 +50,19 @@ export const getById = async (req, res) => {
 
 export const updateCate = async (req, res) => {
   const _id = req.params.id;
+  const file = req.file;
+  console.log(file);
   try {
-    const update = await Category.findOneAndUpdate({ _id }, req.body, {
-      new: true,
-    }).exec();
+    const update = await Category.findOneAndUpdate(
+      { _id },
+      (req.body, { imageCate: getUrlImg(file) }),
+      {
+        new: true,
+      }
+    ).exec();
     res.status(200).json({ message: "Cập nhật thành công", response: update });
   } catch (error) {
-    res.status(500).json({ message: "lỗi" });
+    res.status(500).json({ message: "Cập nhật thất bại" });
     console.log(error);
-  }
-};
-
-export const removeImage = async (req, res) => {
-  const { image } = req.body;
-  const replaceUrl = image.replace(process.env.URL_API_UPLOAD, "");
-  const filePath = `./public/${replaceUrl}`;
-  console.log("filepath", filePath);
-  if (fs.existsSync(filePath)) {
-    fs.unlink(filePath, (err) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).send("Xóa file không thành công");
-      }
-      console.log("thành công");
-      return res.send("Xóa file thành công");
-    });
-  } else {
-    return res.status(404).send("không có ảnh này");
   }
 };
