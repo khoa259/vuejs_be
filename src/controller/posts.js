@@ -1,7 +1,7 @@
 import User from "../models/user.js";
 import Posts from "../models/posts.js";
 import Category from "../models/category.js";
-import { getUrlImg } from "../middleware/uploadFile.js";
+import { getUrlImg, removeImage } from "../middleware/uploadFile.js";
 
 export const createPost = async (req, res) => {
   const file = req.file;
@@ -17,6 +17,7 @@ export const createPost = async (req, res) => {
     province,
     district,
     ward,
+    fullAdress,
   } = req.body;
   try {
     const createposts = await new Posts({
@@ -27,12 +28,11 @@ export const createPost = async (req, res) => {
       pricemax,
       timeopen,
       timeclose,
-      location: {
-        address,
-        province,
-        district,
-        ward,
-      },
+      address,
+      province,
+      district,
+      ward,
+      fullAdress,
       imagePosts: getUrlImg(file),
     }).save();
     await Category.findOneAndUpdate(createposts.categoryId, {
@@ -101,6 +101,16 @@ export const getById = async (req, res) => {
   }
 };
 
+export const readById = async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const get = await Posts.findById({ _id }).exec();
+    res.status(200).json({ response: get });
+  } catch (error) {
+    res.status(500).json({ message: "Không tìm thấy" });
+  }
+};
+
 export const getPostsRelated = async (req, res) => {
   try {
     const _id = req.params.id;
@@ -110,7 +120,7 @@ export const getPostsRelated = async (req, res) => {
       categoryId: get.categoryId,
     })
       .populate("categoryId", "nameCate")
-      .limit(6)
+      .limit(8)
       .exec();
     res.status(200).json({ related: getPostsRelated });
   } catch (error) {
@@ -160,17 +170,46 @@ export const updatePosts = async (req, res) => {
   try {
     const _id = req.params.id;
     const file = req.file;
+    const {
+      title,
+      categoryId,
+      description,
+      pricemin,
+      pricemax,
+      timeopen,
+      timeclose,
+      address,
+      province,
+      district,
+      ward,
+      fullAdress,
+    } = req.body;
     const update = await Posts.findByIdAndUpdate(
       { _id },
-      (req.body, { imagePosts: getUrlImg(file) })
+      {
+        title,
+        categoryId,
+        description,
+        pricemin,
+        pricemax,
+        timeopen,
+        timeclose,
+        address,
+        province,
+        district,
+        ward,
+        fullAdress,
+        imagePosts: getUrlImg(file),
+      }
     ).exec();
     res.status(200).json({ message: "Cập nhật thành công", response: update });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Cập nhật thất bại" });
   }
 };
 
-export const deletPosts = async (req, res) => {
+export const deletePosts = async (req, res) => {
   try {
     const _id = req.params.id;
     const removePosts = await Posts.findByIdAndDelete({ _id }).exec();

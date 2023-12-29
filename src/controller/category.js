@@ -41,7 +41,7 @@ export const getCate = async (req, res) => {
 export const getById = async (req, res) => {
   const _id = req.params.id;
   try {
-    const getCateById = await Category.find({ _id }).populate("postId").exec();
+    const getCateById = await Category.findById({ _id }).exec();
     res.status(200).json({ message: "Thành công ", response: getCateById });
   } catch (error) {
     res.status(500).json({ message: "Không tìm thấy danh mục nào" });

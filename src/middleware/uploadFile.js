@@ -1,5 +1,7 @@
 import multer from "multer";
 import dotenv from "dotenv";
+import fs from "fs-extra";
+
 dotenv.config();
 
 const storage = multer.diskStorage({
@@ -13,14 +15,13 @@ const storage = multer.diskStorage({
 });
 export const upload = multer({ storage: storage });
 export const getUrlImg = (file) => {
-  console.log(process.env.URL_API_UPLOAD);
   console.log("file=>", file);
   return `${process.env.URL_API_UPLOAD}/${file.filename}`;
 };
 
 export const removeImage = async (req, res) => {
-  const { image } = req.body;
-  const replaceUrl = image.replace(process.env.URL_API_UPLOAD, "");
+  const { image_rm } = req.body;
+  const replaceUrl = image_rm.replace(process.env.URL_API_UPLOAD, "");
   const filePath = `./public/${replaceUrl}`;
   console.log("filepath", filePath);
   if (fs.existsSync(filePath)) {

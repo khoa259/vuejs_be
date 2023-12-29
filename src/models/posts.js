@@ -15,12 +15,11 @@ const postSchema = new mongoose.Schema(
         type: String,
         require: true,
       },
-      imagePosts: [
-        {
-          type: String,
-          require: true,
-        },
-      ],
+      imagePosts: {
+        type: String,
+        require: true,
+      },
+
       categoryId: {
         type: ObjectId,
         ref: "Category",
@@ -53,19 +52,24 @@ const postSchema = new mongoose.Schema(
         type: String,
         require: true,
       },
-      location: {
-        address: {
-          type: String,
-        },
-        province: {
-          type: String,
-        },
-        district: {
-          type: String,
-        },
-        ward: {
-          type: String,
-        },
+      address: {
+        type: String,
+        require: true,
+      },
+      province: {
+        type: String,
+        require: true,
+      },
+      district: {
+        type: String,
+        require: true,
+      },
+      ward: {
+        type: String,
+        require: true,
+      },
+      fullAdress: {
+        type: String,
       },
     },
   ],
