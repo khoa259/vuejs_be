@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   createPost,
+  createRandomPosts,
   deletePosts,
   getById,
   getPostByUserId,
@@ -16,6 +17,7 @@ import { removeImage, upload } from "../middleware/uploadFile.js";
 export const routerPosts = Router();
 
 routerPosts.post("/creatPosts", upload.single("imagePosts"), createPost);
+routerPosts.post("/creatRandomPosts", createRandomPosts);
 routerPosts.get("/getPosts", getPosts);
 routerPosts.get("/getById/:id", getById);
 routerPosts.get("/readById/:id", readById);
