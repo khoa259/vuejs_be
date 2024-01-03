@@ -1,7 +1,7 @@
 import User from "../models/user.js";
 import Posts from "../models/posts.js";
 import Category from "../models/category.js";
-import { getUrlImg, removeImage } from "../middleware/uploadFile.js";
+import { getUrlImg } from "../middleware/uploadFile.js";
 
 export const createPost = async (req, res) => {
   const file = req.file;
@@ -52,17 +52,24 @@ export const createPost = async (req, res) => {
 export const createRandomPosts = async (req, res) => {
   const limit = 30;
   try {
+    const checkExist = await Category.findOne({}).exec();
+    if (!checkExist) {
+      console.log(checkExist);
+      return res
+        .status(500)
+        .json({ message: "Bạn cần thêm danh mục để thực hiện tiếp" });
+    }
     const checkLimit = await Posts.find({}).exec();
     if (checkLimit.length >= limit) {
-      return res.status(400).send({
-        message: `Cần dưới ${limit} bài viết để có thể thực hiện chức năng này`,
+      return res.status(400).json({
+        message: `Giới hạn tạo ngẫu nhiên tối đa ${limit} bài viết`,
       });
     }
     for (let i = 1; i <= 5; i++) {
       await Posts.insertMany([
         {
           title: `Tieu de ${i}`,
-          categoryId: `658e3eb614275ac44da7eff6`,
+          categoryId: checkExist?._id,
           description: `mo ta bai viet ${i}`,
           pricemin: `100${i}`,
           pricemax: `200${i}`,
@@ -77,7 +84,7 @@ export const createRandomPosts = async (req, res) => {
         },
       ]);
     }
-    return res.status(200).send("Thành công");
+    return res.status(200).json({ message: "Thành công" });
   } catch (error) {
     res.status(500).json({ message: " không thành công" });
     console.log(error);
