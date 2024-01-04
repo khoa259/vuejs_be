@@ -1,4 +1,3 @@
-import fs from "fs-extra";
 import dotenv from "dotenv";
 dotenv.config();
 
