@@ -64,6 +64,7 @@ export const createRandomPosts = async (req, res) => {
           title: `Tieu de ${i}`,
           categoryId: `658e3eb614275ac44da7eff6`,
           description: `mo ta bai viet ${i}`,
+          review: Math.floor(Math.random() * 200),
           pricemin: `100${i}`,
           pricemax: `200${i}`,
           timeopen: `09:0${i}`,
