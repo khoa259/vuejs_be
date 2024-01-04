@@ -68,12 +68,12 @@ export const createRandomPosts = async (req, res) => {
     for (let i = 1; i <= 5; i++) {
       await Posts.insertMany([
         {
-          title: `Tieu de ${i}`,
+          title: `Tieu de ${Math.floor(Math.random() * 50)}`,
           categoryId: checkExist?._id,
           description: `mo ta bai viet ${i}`,
           review: Math.floor(Math.random() * 200),
-          pricemin: `100${i}`,
-          pricemax: `200${i}`,
+          pricemin: Math.floor(Math.random() * 100000) + 30000,
+          pricemax: Math.floor(Math.random() * 200000) + 100000,
           timeopen: `09:0${i}`,
           timeclose: `21:0${i}`,
           address: `số ${i}`,
