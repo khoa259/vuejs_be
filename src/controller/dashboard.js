@@ -7,7 +7,7 @@ export const Dashboard = async (req, res) => {
       // get post top treding
       const getPostsTrending = await Posts.find(
         {},
-        { review: 1, title: 1, imagePosts: 1 }
+        { review: 1, title: 1, imagePosts: 1, createdAt: 1 }
       )
         .sort({ review: -1 })
         .populate("categoryId", "nameCate")

@@ -68,10 +68,10 @@ export const createRandomPosts = async (req, res) => {
     for (let i = 1; i <= 5; i++) {
       await Posts.insertMany([
         {
-          title: `Tieu de ${Math.floor(Math.random() * 50)}`,
+          title: `Tiêu đề bài viết ${Math.floor(Math.random() * 50)}`,
           categoryId: checkExist?._id,
-          description: `mo ta bai viet ${i}`,
-          review: Math.floor(Math.random() * 200),
+          description: `Mô tả bài viết , stt mô tả ${i}`,
+          review: Math.floor(Math.random() * 2000),
           pricemin: Math.floor(Math.random() * 100000) + 30000,
           pricemax: Math.floor(Math.random() * 200000) + 100000,
           timeopen: `09:0${i}`,
@@ -81,7 +81,7 @@ export const createRandomPosts = async (req, res) => {
           district: "009",
           ward: "00361",
           fullAdress: `số ${i}, phường Hạ Đình, quận Thanh Xuân, Hà Nội`,
-          imagePosts: ` https://www.datanami.com/wp-content/uploads/2021/10/tonic_ai_real_fake_data.png`,
+          imagePosts: "https://random.imagecdn.app/500/550",
         },
       ]);
     }
@@ -93,14 +93,19 @@ export const createRandomPosts = async (req, res) => {
 };
 
 export const getPosts = async (req, res, next) => {
-  const limitItem = 12;
+  const limitItem = 24;
   const page = parseInt(req.query.page) || 1;
   const skipPage = (page - 1) * limitItem;
 
   // console.log(getLength);
   try {
     const getLength = await Posts.countDocuments({});
-    const getAll = await Posts.find({})
+    const getPostsTopView = await Posts.find()
+      .populate("categoryId", "nameCate")
+      .sort({ review: -1 })
+      .limit(8)
+      .exec();
+    const getAll = await Posts.find()
       .populate("categoryId", "nameCate")
       .sort({ createdAt: -1 })
       .skip(skipPage)
@@ -108,7 +113,13 @@ export const getPosts = async (req, res, next) => {
       .exec();
     res.status(200).json({
       message: "Lấy bài viết thành công",
-      response: { getLength, limitItem, page, getAll },
+      response: {
+        getLength,
+        limitItem,
+        page,
+        getAll,
+        topView: getPostsTopView,
+      },
     });
   } catch (error) {
     res.status(500).json({ message: "Lấy bài viết không thành công" });
@@ -177,13 +188,21 @@ export const handleSearchPosts = async (req, res) => {
   try {
     const search = req.query.search.trim();
     if (search === "") {
-      return res.status(200).json({ response: [] });
+      return res
+        .status(200)
+        .json({ message: "Không có bài viết nào liên quan" });
     }
     console.log(search);
     const getPosts = await Posts.find({
       $or: [
         {
           title: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+        {
+          district: {
             $regex: search,
             $options: "i",
           },
