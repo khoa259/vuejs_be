@@ -93,7 +93,7 @@ export const createRandomPosts = async (req, res) => {
 };
 
 export const getPosts = async (req, res, next) => {
-  const limitItem = 24;
+  const limitItem = 12;
   const page = parseInt(req.query.page) || 1;
   const skipPage = (page - 1) * limitItem;
 
@@ -151,7 +151,7 @@ export const getById = async (req, res) => {
       },
       { new: true }
     );
-    res.status(200).json({ response: [get] });
+    res.status(200).json({ response: get });
   } catch (error) {
     res.status(500).json({ message: "Không tìm thấy" });
   }

@@ -1,3 +1,4 @@
+import Posts from "../models/posts.js";
 import User from "../models/user.js";
 
 export const addWishlist = async (req, res) => {
@@ -9,9 +10,12 @@ export const addWishlist = async (req, res) => {
         $addToSet: {
           wishlist: postsId,
         },
-      }
+      },
+      await Posts.findByIdAndUpdate(postsId, {
+        statusSave: true,
+      })
     )
-      .populate("wishlist", "title imagePosts")
+      .populate("wishlist", "title imagePosts statusSave")
       .exec();
     res.status(200).json({
       response: {
@@ -30,8 +34,13 @@ export const deleteWishlist = async (req, res) => {
     const user = await User.findOneAndUpdate(
       { email },
       { $pull: { wishlist: postsId } },
+      await Posts.findByIdAndUpdate(postsId, {
+        statusSave: false,
+      }),
       { new: true }
-    ).exec();
+    )
+      .populate("wishlist", "title imagePosts statusSave")
+      .exec();
     res.status(200).json({
       response: {
         email: user.email,
@@ -50,7 +59,7 @@ export const getWishList = async (req, res) => {
     const user = await User.find({ email })
       .sort({ createdAt: -1 })
       .select("wishlist")
-      .populate("wishlist", "title imagePosts")
+      .populate("wishlist", "title imagePosts statusSave")
       .exec();
     res.status(200).json({
       response: user,
