@@ -5,8 +5,6 @@ import { getUrlImg } from "../middleware/uploadFile.js";
 import Category from "../models/category.js";
 
 export const createCate = async (req, res) => {
-  const file = req.file;
-  const { nameCate } = req.body;
   try {
     const checkDuplicate = await Category.findOne({ nameCate }).exec();
     if (checkDuplicate) {
@@ -14,10 +12,7 @@ export const createCate = async (req, res) => {
         .status(400)
         .json({ message: `Danh mục ${nameCate} đã tồn tại` });
     }
-    const create = await new Category({
-      imageCate: getUrlImg(file),
-      nameCate: req.body.nameCate,
-    }).save();
+    const create = await new Category(req.body).save();
 
     res.status(200).json({ message: "Thêm thành công", create });
   } catch (error) {

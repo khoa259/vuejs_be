@@ -1,19 +1,21 @@
 import multer from "multer";
 import dotenv from "dotenv";
 import fs from "fs-extra";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import cloudinary from "../config/cloudinaryCofig.js";
 
 dotenv.config();
+//upload file local
+// const storage = multer.diskStorage({
+//   destination: (res, file, cb) => {
+//     cb(null, "./public");
+//   },
+//   filename: (res, file, cb) => {
+//     const uniqueSuffix = Date.now() + Math.round(Math.random() * 1e9);
+//     cb(null, `${uniqueSuffix}.${file.originalname}`);
+//   },
+// });
 
-const storage = multer.diskStorage({
-  destination: (res, file, cb) => {
-    cb(null, "./public");
-  },
-  filename: (res, file, cb) => {
-    const uniqueSuffix = Date.now() + Math.round(Math.random() * 1e9);
-    cb(null, `${uniqueSuffix}.${file.originalname}`);
-  },
-});
-export const upload = multer({ storage: storage });
 export const getUrlImg = (file) => {
   console.log("file=>", file);
   return `${process.env.URL_API_UPLOAD}/${file.filename}`;
@@ -37,3 +39,13 @@ export const removeImage = async (req, res) => {
     return res.status(404).send("không có ảnh này");
   }
 };
+
+//upload file cloudinary
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "vuejs",
+    allowedFormats: ["jpg", "jpeg", "png"],
+  },
+});
+export const upload = multer({ storage: storage });

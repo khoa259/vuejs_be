@@ -52,9 +52,15 @@ export const createPost = async (req, res) => {
 export const createRandomPosts = async (req, res) => {
   const limit = 30;
   try {
-    const checkExist = await Category.findOne({}).exec();
-    if (!checkExist) {
-      console.log(checkExist);
+    const countCategories = await Category.countDocuments().exec();
+    const randomId = Math.floor(Math.random() * countCategories);
+    console.log(randomId);
+    const getIdRandom = await Category.findOne({}, { _id: 1 })
+      .skip(randomId)
+      .limit(1);
+
+    if (!getIdRandom || getIdRandom === 0) {
+      console.log(getIdRandom);
       return res
         .status(500)
         .json({ message: "Bạn cần thêm danh mục để thực hiện tiếp" });
@@ -69,7 +75,7 @@ export const createRandomPosts = async (req, res) => {
       await Posts.insertMany([
         {
           title: `Tiêu đề bài viết ${Math.floor(Math.random() * 50)}`,
-          categoryId: checkExist?._id,
+          categoryId: getIdRandom?._id,
           description: `Mô tả bài viết , stt mô tả ${i}`,
           review: Math.floor(Math.random() * 2000),
           pricemin: Math.floor(Math.random() * 100000) + 30000,
@@ -221,10 +227,14 @@ export const handleSearchPosts = async (req, res) => {
 export const getPostsByCategories = async (req, res) => {
   try {
     const categoryId = req.query.category;
+    const getNameCate = await Category.findById(
+      { _id: categoryId },
+      { nameCate: 1 }
+    ).exec();
     const getPosts = await Posts.find({ categoryId })
-      .populate("categoryId")
+      .populate("categoryId", "nameCate")
       .exec();
-    res.status(200).json({ response: getPosts });
+    res.status(200).json({ response: getPosts, getNameCate });
   } catch (error) {
     console.log(error);
   }
