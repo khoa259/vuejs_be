@@ -44,7 +44,7 @@ export const removeImage = async (req, res) => {
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: "vuejs",
+    folder: "vue",
     allowedFormats: ["jpg", "jpeg", "png"],
   },
 });

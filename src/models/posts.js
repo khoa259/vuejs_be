@@ -16,8 +16,12 @@ const postSchema = new mongoose.Schema(
         require: true,
       },
       imagePosts: {
-        type: String,
-        require: true,
+        url: {
+          type: String,
+        },
+        publicid: {
+          type: String,
+        },
       },
 
       categoryId: {

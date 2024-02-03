@@ -4,37 +4,8 @@ import Category from "../models/category.js";
 import { getUrlImg } from "../middleware/uploadFile.js";
 
 export const createPost = async (req, res) => {
-  const file = req.file;
-  const {
-    title,
-    categoryId,
-    description,
-    pricemin,
-    pricemax,
-    timeopen,
-    timeclose,
-    address,
-    province,
-    district,
-    ward,
-    fullAdress,
-  } = req.body;
   try {
-    const createposts = await new Posts({
-      title,
-      categoryId,
-      description,
-      pricemin,
-      pricemax,
-      timeopen,
-      timeclose,
-      address,
-      province,
-      district,
-      ward,
-      fullAdress,
-      imagePosts: getUrlImg(file),
-    }).save();
+    const createposts = await new Posts(req.body).save();
     await Category.findOneAndUpdate(createposts.categoryId, {
       $addToSet: {
         postId: createposts._id,
@@ -87,7 +58,7 @@ export const createRandomPosts = async (req, res) => {
           district: "009",
           ward: "00361",
           fullAdress: `số ${i}, phường Hạ Đình, quận Thanh Xuân, Hà Nội`,
-          imagePosts: "https://random.imagecdn.app/500/550",
+          imagePosts: { url: "https://random.imagecdn.app/500/550" },
         },
       ]);
     }
@@ -243,39 +214,7 @@ export const getPostsByCategories = async (req, res) => {
 export const updatePosts = async (req, res) => {
   try {
     const _id = req.params.id;
-    const file = req.file;
-    const {
-      title,
-      categoryId,
-      description,
-      pricemin,
-      pricemax,
-      timeopen,
-      timeclose,
-      address,
-      province,
-      district,
-      ward,
-      fullAdress,
-    } = req.body;
-    const update = await Posts.findByIdAndUpdate(
-      { _id },
-      {
-        title,
-        categoryId,
-        description,
-        pricemin,
-        pricemax,
-        timeopen,
-        timeclose,
-        address,
-        province,
-        district,
-        ward,
-        fullAdress,
-        imagePosts: getUrlImg(file),
-      }
-    ).exec();
+    const update = await Posts.findByIdAndUpdate({ _id }, req.body).exec();
     res.status(200).json({ message: "Cập nhật thành công", response: update });
   } catch (error) {
     console.log(error);

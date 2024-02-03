@@ -5,6 +5,7 @@ import { getUrlImg } from "../middleware/uploadFile.js";
 import Category from "../models/category.js";
 
 export const createCate = async (req, res) => {
+  const { nameCate } = req.body;
   try {
     const checkDuplicate = await Category.findOne({ nameCate }).exec();
     if (checkDuplicate) {

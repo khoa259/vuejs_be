@@ -13,8 +13,12 @@ const categorieSchema = new mongoose.Schema(
       },
     ],
     imageCate: {
-      type: String,
-      require: true,
+      url: {
+        type: String,
+      },
+      publicid: {
+        type: String,
+      },
     },
   },
   { timestamps: true }

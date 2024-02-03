@@ -1,8 +1,8 @@
 import cloudinary from "../config/cloudinaryCofig.js";
 
 export const uploadImages = async (req, res) => {
+  const file = req.file.path;
   try {
-    const file = req.file.path;
     const image = await cloudinary.uploader.upload(file);
     console.log("image", image);
 

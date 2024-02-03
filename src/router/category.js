@@ -10,9 +10,9 @@ import { uploadImages } from "../controller/uploadImage.js";
 
 export const routerCate = Router();
 
-routerCate.post("/creatCategory", upload.single("images"), createCate);
+routerCate.post("/creatCategory", createCate);
 routerCate.post("/deleteImage", removeImage);
 routerCate.get("/getAllCategory", getCate);
 routerCate.get("/getCategory/:id", getById);
 routerCate.post("/upload", upload.single("images"), uploadImages);
-routerCate.put("/updateCategory/:id", upload.single("images"), updateCate);
+routerCate.put("/updateCategory/:id", updateCate);
