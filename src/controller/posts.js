@@ -169,11 +169,16 @@ export const handleSearchPosts = async (req, res) => {
         .status(200)
         .json({ message: "Không có bài viết nào liên quan" });
     }
-    console.log(search);
     const getPosts = await Posts.find({
       $or: [
         {
           title: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+        {
+          fullAdress: {
             $regex: search,
             $options: "i",
           },
@@ -187,6 +192,7 @@ export const handleSearchPosts = async (req, res) => {
       ],
     })
       .populate("categoryId", "nameCate")
+      .sort({ createdAt: -1 })
       .exec();
     res.status(200).json({ response: getPosts });
   } catch (error) {

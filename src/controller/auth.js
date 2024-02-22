@@ -25,7 +25,6 @@ const sendVericationEmail = async (email, verifiedCationToken, userName) => {
     .readFileSync("src/controller/index_mail.html", "utf-8")
     .toString();
   const template = Handlebars.compile(source);
-  console.log(Handlebars.compile(source));
   const replacements = {
     userName,
     linkConfirm: `${process.env.BASE_API_VERIFY}/${verifiedCationToken}`,
@@ -78,7 +77,7 @@ export const signUp = async (req, res) => {
     );
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "lỗi đăng ký" });
+    res.status(500).json({ message: "Lỗi đăng ký" });
   }
 };
 
@@ -145,7 +144,15 @@ export const getUserById = async (req, res) => {
 
 export const get = async (req, res) => {
   try {
-    const user = await User.find().sort(mySort).exec();
+    const user = await User.find(
+      {},
+      { _id: 1, email: 1, userName: 1, createdAt: 1, role: 1 }
+    )
+      .sort(mySort)
+      .exec();
+
     res.json({ response: user });
-  } catch (error) {}
+  } catch (error) {
+    res.status(400).json({ message: "khong co du lieu" });
+  }
 };
